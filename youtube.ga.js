@@ -1,7 +1,8 @@
 /*!
- * youtube.ga.js | v0.3
- * Copyright (c) 2012 - 2013 Sander Heilbron (http://sanderheilbron.nl)
+ * youtube.ga.js | v0.4
+ * Copyright (c) 2012 - 2014 Sander Heilbron (http://sanderheilbron.nl)
  * Edits by Ali Karbassi (http://karbassi.com)
+ * Amended for Universal Analytics by Patrick Beeson (http://patrickbeeson.com)
  * MIT licensed
  */
 
@@ -52,7 +53,7 @@ function onPlayerReady(event) {
 }
 
 function onPlayerProgressChange() {
-    if (!configYouTubePlayer.trackProgress || typeof _gaq === 'undefined') {
+    if (!configYouTubePlayer.trackProgress || typeof ga === 'undefined') {
         return;
     }
 
@@ -77,12 +78,12 @@ function onPlayerProgressChange() {
     }
 
     if (progress) {
-        _gaq.push(['_trackEvent', 'YouTube', 'Played video: ' + progress, YT_GA.url, undefined, true]);
+        ga('send', 'event', 'YouTube', 'Played video: ' + progress, YT_GA.url, undefined, {'nonInteraction': 1});
     }
 }
 
 function onPlayerPlaybackQualityChange(event) {
-    if (!configYouTubePlayer.trackPlaybackQuality || typeof _gaq === 'undefined') {
+    if (!configYouTubePlayer.trackPlaybackQuality || typeof ga === 'undefined') {
         return;
     }
 
@@ -107,32 +108,32 @@ function onPlayerPlaybackQualityChange(event) {
     }
 
     if (quality) {
-        _gaq.push(['_trackEvent', 'YouTube', 'Video quality: ' + quality, YT_GA.url, undefined, true]);
+        ga('send', 'event', 'YouTube', 'Video quality: ' + quality, YT_GA.url, undefined, {'nonInteraction': 1});
     }
 }
 
 function onPlayerStateChange(event) {
-    if (typeof _gaq === 'undefined') {
+    if (typeof ga === 'undefined') {
         return;
     }
-    
+
     // Calculate percent complete
     YT_GA.timePercentComplete = Math.round(YT_GA.player.getCurrentTime() / YT_GA.player.getDuration() * 100);
 
     if (event.data === YT.PlayerState.PLAYING && !YT_GA.videoPlayed) {
 
-        _gaq.push(['_trackEvent', 'YouTube', 'Started video', YT_GA.url, undefined, true]);
+        ga('send', 'event', 'YouTube', 'Started video', YT_GA.url, undefined, {'nonInteraction': 1});
         YT_GA.videoPaused = false;
         YT_GA.videoPlayed = true; //  Avoid subsequent play trackings
 
     } else if (event.data === YT.PlayerState.PAUSED && (YT_GA.timePercentComplete < 92 && !YT_GA.videoPaused)) {
 
-        _gaq.push(['_trackEvent', 'YouTube', 'Paused video', YT_GA.url, undefined, true]);
+        ga('send', 'event', 'YouTube', 'Paused video', YT_GA.url, undefined, {'nonInteraction': 1});
         YT_GA.videoPaused = true; // Avoid subsequent pause trackings
 
     } else if (event.data === YT.PlayerState.ENDED && !YT_GA.videoCompleted) {
 
-        _gaq.push(['_trackEvent', 'YouTube', 'Completed video', YT_GA.url, undefined, true]);
+        ga('send', 'event', 'YouTube', 'Completed video', YT_GA.url, undefined, {'nonInteraction': 1});
         YT_GA.videoCompleted = true; // Avoid subsequent finish trackings
 
     }

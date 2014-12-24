@@ -1,6 +1,8 @@
 # Google Analytics YouTube Video Tracking
 Tracking YouTube Player Events with Google Analytics.
 
+*Note: This fork of the original allows for use with the newer analytics.js. The original is restricted to the older ga.js.*
+
 ## Usage
 Include the scripts in the body section of the HTML document, just before the `</body>` tag. You’ll need to be running on a web server instead of opening the file directly in your browser. Flash and JS security restrictions will prevent the API from working when run locally.
 
@@ -10,9 +12,9 @@ Include the scripts in the body section of the HTML document, just before the `<
 <script>
 	var configYouTubePlayer = {
 		videoID: 'Rk6_hdRtJOE' // The YouTube video ID that identifies the video that the player will load.
-	};	
+	};
 </script>
-```	
+```
 ### With some options
 ```html
 <script src="path/to/youtube.ga.min.js"></script>
@@ -42,7 +44,7 @@ Include the scripts in the body section of the HTML document, just before the `<
             'theme': 'light'
         }
 	};
-</script>	
+</script>
 ```
 
 Put the following div element inside the body element. The script will replace the div element with an iframe tag.
@@ -52,11 +54,11 @@ Put the following div element inside the body element. The script will replace t
 The iframe embeds a YouTube video player and the YouTube iframe API posts content to the iframe tag on your page. This approach allows YouTube to serve an HTML5 player rather than a Flash player for mobile devices that do not support Flash.
 
 ## Requirements
-* Google Analytics Tracking Code (asynchronous)
+* Google Analytics Tracking Code (Universal Analytics, *analytics.js*) *Note: See [original version](https://github.com/sanderheilbron/youtube.ga.js) for ga.js)*
 * The end user must be using a browser that supports the HTML5 postMessage feature. Most modern browsers support postMessage, though Internet Explorer 7 does not support it.
 
 ## Browser Support
-Tested in Chrome (21), Firefox (15), Safari (5,6), IE (8,9). Also tested on iOS.
+Tested in Chrome (39), Firefox (15), Safari (5,6), IE (8,9). Also tested on iOS.
 
 ## Event Tracking
 All player events are only tracked once, except for video quality events. Restarting the video will not reset the event trackers.
@@ -71,9 +73,9 @@ All player events are only tracked once, except for video quality events. Restar
 
 #####Example
 ```js
-_gaq.push(['_trackEvent', 'YouTube', 'Started video', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, true]);
-_gaq.push(['_trackEvent', 'YouTube', 'Paused video', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, true]);
-_gaq.push(['_trackEvent', 'YouTube', 'Completed video', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, true]);
+ga('send', 'event' 'YouTube', 'Started video', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, {'nonInteraction': 1});
+ga('send', 'event', 'YouTube', 'Paused video', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, {'nonInteraction': 1});
+ga('send', 'event', 'YouTube', 'Completed video', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, {'nonInteraction': 1});
 ```
 ### Progress event trackers
 
@@ -86,9 +88,9 @@ _gaq.push(['_trackEvent', 'YouTube', 'Completed video', 'http://www.youtube.com/
 
 #####Example
 ```js
-_gaq.push(['_trackEvent', 'YouTube', 'Played video: 25%', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, true]);
-_gaq.push(['_trackEvent', 'YouTube', 'Played video: 50%', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, true]);
-_gaq.push(['_trackEvent', 'YouTube', 'Played video: 75%', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, true]);
+ga('send', 'event', 'YouTube', 'Played video: 25%', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, {'nonInteraction': 1});
+ga('send', 'event', 'YouTube', 'Played video: 50%', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, {'nonInteraction': 1});
+ga('send', 'event', 'YouTube', 'Played video: 75%', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, {'nonInteraction': 1});
 ```
 
 ### Quality event trackers
@@ -105,20 +107,25 @@ The YouTube player fires a "quality" event at the start of the video and subsequ
 
 #####Example
 ```js
-_gaq.push(['_trackEvent', 'YouTube', 'Video quality: 1080p HD', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, true]);
-_gaq.push(['_trackEvent', 'YouTube', 'Video quality: 720p HD', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, true]);
-_gaq.push(['_trackEvent', 'YouTube', 'Video quality: 480p', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, true]);
-_gaq.push(['_trackEvent', 'YouTube', 'Video quality: 360p', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, true]);
-_gaq.push(['_trackEvent', 'YouTube', 'Video quality: 240p', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, true]);
+ga(['send', 'event', 'YouTube', 'Video quality: 1080p HD', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, {'nonInteraction': 1});
+ga('send', 'event', 'YouTube', 'Video quality: 720p HD', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, {'nonInteraction': 1});
+ga('send', 'event', 'YouTube', 'Video quality: 480p', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, {'nonInteraction': 1});
+ga('send', 'event', 'YouTube', 'Video quality: 360p', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, {'nonInteraction': 1});
+ga('send', 'event', 'YouTube', 'Video quality: 240p', 'http://www.youtube.com/watch?v=Rk6_hdRtJOE&feature=player_embedded', undefined, {'nonInteraction': 1});
 ```
 
 ### Bounce rate
-The event trackers do not impact bounce rate of the page which embeds the video. The value of the opt_noninteraction parameter is set to `true`.
+The event trackers do not impact bounce rate of the page which embeds the video. The value of the nonInteraction parameter is set to `1`.
 
 ## Issues
 Have a bug? Please create an issue here on GitHub!
 
 ## Changelog
+
+### 0.4 (via fork) (December 23, 2014):
+ * Changed from ga.js to analytics.js
+ * Updated documentation.
+
 ### 0.3 (January 29, 2013):
  * Bug fixes.
  * Updated documentation.
@@ -140,6 +147,8 @@ Licensed under the MIT license.
 Copyright (C) 2012-2013 Sander Heilbron, http://sanderheilbron.nl
 
 Edits by Ali Karbassi, http://karbassi.com
+
+Analytics.js edits by Patrick Beeson, http://patrickbeeson.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
